@@ -61,12 +61,12 @@ EOT
     delegated_subnet_id               = optional(string)
     version                           = optional(string)
     create_mode                       = optional(string)
-    backup_retention_days             = optional(number, 7)
+    backup_retention_days             = optional(number) # Default: 7
     administrator_password_wo_version = optional(number)
     administrator_password_wo         = optional(string)
     administrator_password            = optional(string)
     administrator_login               = optional(string)
-    geo_redundant_backup_enabled      = optional(bool, false)
+    geo_redundant_backup_enabled      = optional(bool) # Default: false
     zone                              = optional(string)
     customer_managed_key = optional(object({
       geo_backup_key_vault_key_id          = optional(string)
@@ -84,15 +84,15 @@ EOT
       type         = string
     }))
     maintenance_window = optional(object({
-      day_of_week  = optional(number, 0)
-      start_hour   = optional(number, 0)
-      start_minute = optional(number, 0)
+      day_of_week  = optional(number) # Default: 0
+      start_hour   = optional(number) # Default: 0
+      start_minute = optional(number) # Default: 0
     }))
     storage = optional(object({
-      auto_grow_enabled   = optional(bool, true)
-      io_scaling_enabled  = optional(bool, false)
+      auto_grow_enabled   = optional(bool) # Default: true
+      io_scaling_enabled  = optional(bool) # Default: false
       iops                = optional(number)
-      log_on_disk_enabled = optional(bool, false)
+      log_on_disk_enabled = optional(bool) # Default: false
       size_gb             = optional(number)
     }))
   }))
