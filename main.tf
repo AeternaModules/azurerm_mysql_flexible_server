@@ -1,3 +1,8 @@
+data "azurerm_key_vault_secret" "administrator_password" {
+  for_each     = { for k, v in var.mysql_flexible_servers : k => v if v.administrator_password_key_vault_id != null && v.administrator_password_key_vault_secret_name != null }
+  name         = each.value.administrator_password_key_vault_secret_name
+  key_vault_id = each.value.administrator_password_key_vault_id
+}
 resource "azurerm_mysql_flexible_server" "mysql_flexible_servers" {
   for_each = var.mysql_flexible_servers
 
@@ -17,7 +22,7 @@ resource "azurerm_mysql_flexible_server" "mysql_flexible_servers" {
   backup_retention_days             = each.value.backup_retention_days
   administrator_password_wo_version = each.value.administrator_password_wo_version
   administrator_password_wo         = each.value.administrator_password_wo
-  administrator_password            = each.value.administrator_password
+  administrator_password            = each.value.administrator_password != null ? each.value.administrator_password : try(data.azurerm_key_vault_secret.administrator_password[each.key].value, null)
   administrator_login               = each.value.administrator_login
   geo_redundant_backup_enabled      = each.value.geo_redundant_backup_enabled
   zone                              = each.value.zone
