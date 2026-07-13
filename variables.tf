@@ -63,14 +63,14 @@ EOT
     delegated_subnet_id                          = optional(string)
     version                                      = optional(string)
     create_mode                                  = optional(string)
-    backup_retention_days                        = optional(number) # Default: 7
+    backup_retention_days                        = optional(number)
     administrator_password_wo_version            = optional(number)
     administrator_password_wo                    = optional(string)
     administrator_password                       = optional(string)
     administrator_password_key_vault_id          = optional(string)
     administrator_password_key_vault_secret_name = optional(string)
     administrator_login                          = optional(string)
-    geo_redundant_backup_enabled                 = optional(bool) # Default: false
+    geo_redundant_backup_enabled                 = optional(bool)
     zone                                         = optional(string)
     customer_managed_key = optional(object({
       geo_backup_key_vault_key_id          = optional(string)
@@ -88,66 +88,18 @@ EOT
       type         = string
     }))
     maintenance_window = optional(object({
-      day_of_week  = optional(number) # Default: 0
-      start_hour   = optional(number) # Default: 0
-      start_minute = optional(number) # Default: 0
+      day_of_week  = optional(number)
+      start_hour   = optional(number)
+      start_minute = optional(number)
     }))
     storage = optional(object({
-      auto_grow_enabled   = optional(bool) # Default: true
-      io_scaling_enabled  = optional(bool) # Default: false
+      auto_grow_enabled   = optional(bool)
+      io_scaling_enabled  = optional(bool)
       iops                = optional(number)
-      log_on_disk_enabled = optional(bool) # Default: false
+      log_on_disk_enabled = optional(bool)
       size_gb             = optional(number)
     }))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.backup_retention_days == null || (v.backup_retention_days >= 1 && v.backup_retention_days <= 35)
-      )
-    ])
-    error_message = "must be between 1 and 35"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.day_of_week == null || (v.maintenance_window.day_of_week >= 0 && v.maintenance_window.day_of_week <= 6))
-      )
-    ])
-    error_message = "must be between 0 and 6"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.start_hour == null || (v.maintenance_window.start_hour >= 0 && v.maintenance_window.start_hour <= 23))
-      )
-    ])
-    error_message = "must be between 0 and 23"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.start_minute == null || (v.maintenance_window.start_minute >= 0 && v.maintenance_window.start_minute <= 59))
-      )
-    ])
-    error_message = "must be between 0 and 59"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.storage == null || (v.storage.iops == null || (v.storage.iops >= 360 && v.storage.iops <= 48000))
-      )
-    ])
-    error_message = "must be between 360 and 48000"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.mysql_flexible_servers : (
-        v.storage == null || (v.storage.size_gb == null || (v.storage.size_gb >= 20 && v.storage.size_gb <= 16384))
-      )
-    ])
-    error_message = "must be between 20 and 16384"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_mysql_flexible_server's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -214,6 +166,9 @@ EOT
   #   condition: length(value) <= 128
   #   message:   [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
   #   source:    [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
+  # path: backup_retention_days
+  #   condition: value >= 1 && value <= 35
+  #   message:   must be between 1 and 35
   # path: create_mode
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: customer_managed_key.key_vault_key_id
@@ -244,6 +199,15 @@ EOT
   #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
   # path: identity.identity_ids[*]
   #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
+  # path: maintenance_window.day_of_week
+  #   condition: value >= 0 && value <= 6
+  #   message:   must be between 0 and 6
+  # path: maintenance_window.start_hour
+  #   condition: value >= 0 && value <= 23
+  #   message:   must be between 0 and 23
+  # path: maintenance_window.start_minute
+  #   condition: value >= 0 && value <= 59
+  #   message:   must be between 0 and 59
   # path: point_in_time_restore_time_in_utc
   #   source:    validation.IsRFC3339Time(...) - no translation rule yet, add one
   # path: private_dns_zone_id
@@ -262,6 +226,12 @@ EOT
   #   source:    [from servers.ValidateFlexibleServerID] !ok
   # path: source_server_id
   #   source:    [from servers.ValidateFlexibleServerID] err != nil
+  # path: storage.iops
+  #   condition: value >= 360 && value <= 48000
+  #   message:   must be between 360 and 48000
+  # path: storage.size_gb
+  #   condition: value >= 20 && value <= 16384
+  #   message:   must be between 20 and 16384
   # path: version
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: tags
