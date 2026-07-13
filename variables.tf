@@ -100,173 +100,150 @@ EOT
       size_gb             = optional(number)
     }))
   }))
-  # --- Unconfirmed validation candidates, derived from azurerm_mysql_flexible_server's provider source ---
-  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
-  # or a path that crosses a list-typed block (needs its own for_each wrapping).
-  # Review, translate into a real validation{} block above, and delete once confirmed.
-  # path: name
-  #   source:    [from validate.FlexibleServerName] !ok
-  # path: name
-  #   condition: length(value) >= 3
-  #   message:   [from validate.FlexibleServerName: invalid when len(value) < 3]
-  #   source:    [from validate.FlexibleServerName: invalid when len(value) < 3]
-  # path: name
-  #   condition: length(value) <= 63
-  #   message:   [from validate.FlexibleServerName: invalid when len(value) > 63]
-  #   source:    [from validate.FlexibleServerName: invalid when len(value) > 63]
-  # path: name
-  #   source:    [from validate.FlexibleServerName] !regexp.MustCompile(`^[a-z0-9]([a-z0-9-]+[a-z0-9])?$`).MatchString(v)
-  # path: resource_group_name
-  #   condition: length(value) <= 90
-  #   message:   [from resourcegroups.ValidateName: invalid when len(value) > 90]
-  #   source:    [from resourcegroups.ValidateName: invalid when len(value) > 90]
-  # path: resource_group_name
-  #   condition: !endswith(value, ".")
-  #   message:   [from resourcegroups.ValidateName: must not end with "."]
-  #   source:    [from resourcegroups.ValidateName: must not end with "."]
-  # path: resource_group_name
-  #   condition: length(value) != 0
-  #   message:   [from resourcegroups.ValidateName: invalid when len(value) == 0]
-  #   source:    [from resourcegroups.ValidateName: invalid when len(value) == 0]
-  # path: resource_group_name
-  #   source:    [from resourcegroups.ValidateName] !matched
-  # path: location
-  #   source:    location.EnhancedValidate: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: administrator_login
-  #   source:    [from validate.FlexibleServerAdministratorLogin] !ok
-  # path: administrator_login
-  #   condition: length(value) >= 1
-  #   message:   [from validate.FlexibleServerAdministratorLogin: invalid when len(value) < 1]
-  #   source:    [from validate.FlexibleServerAdministratorLogin: invalid when len(value) < 1]
-  # path: administrator_login
-  #   condition: length(value) <= 32
-  #   message:   [from validate.FlexibleServerAdministratorLogin: invalid when len(value) > 32]
-  #   source:    [from validate.FlexibleServerAdministratorLogin: invalid when len(value) > 32]
-  # path: administrator_login
-  #   source:    [from validate.FlexibleServerAdministratorLogin] !regexp.MustCompile(`^[a-zA-Z0-9_]*$`).MatchString(v)
-  # path: administrator_login
-  #   source:    [from validate.FlexibleServerAdministratorLogin] v == "azure_superuser" || v == "admin" || v == "administrator" || v == "root" || v == "guest" || v == "public"
-  # path: administrator_password
-  #   source:    [from validate.FlexibleServerAdministratorPassword] !ok
-  # path: administrator_password
-  #   condition: length(value) >= 8
-  #   message:   [from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]
-  #   source:    [from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]
-  # path: administrator_password
-  #   condition: length(value) <= 128
-  #   message:   [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
-  #   source:    [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
-  # path: administrator_password_wo
-  #   source:    [from validate.FlexibleServerAdministratorPassword] !ok
-  # path: administrator_password_wo
-  #   condition: length(value) >= 8
-  #   message:   [from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]
-  #   source:    [from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]
-  # path: administrator_password_wo
-  #   condition: length(value) <= 128
-  #   message:   [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
-  #   source:    [from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]
-  # path: backup_retention_days
-  #   condition: value >= 1 && value <= 35
-  #   message:   must be between 1 and 35
-  # path: create_mode
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: customer_managed_key.key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] !ok
-  # path: customer_managed_key.key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] err != nil
-  # path: customer_managed_key.primary_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
-  # path: customer_managed_key.primary_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
-  # path: customer_managed_key.geo_backup_key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] !ok
-  # path: customer_managed_key.geo_backup_key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] err != nil
-  # path: customer_managed_key.geo_backup_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
-  # path: customer_managed_key.geo_backup_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
-  # path: delegated_subnet_id
-  #   source:    [from commonids.ValidateSubnetID] !ok
-  # path: delegated_subnet_id
-  #   source:    [from commonids.ValidateSubnetID] err != nil
-  # path: high_availability.mode
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: identity.type
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: identity.identity_ids[*]
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
-  # path: identity.identity_ids[*]
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
-  # path: maintenance_window.day_of_week
-  #   condition: value >= 0 && value <= 6
-  #   message:   must be between 0 and 6
-  # path: maintenance_window.start_hour
-  #   condition: value >= 0 && value <= 23
-  #   message:   must be between 0 and 23
-  # path: maintenance_window.start_minute
-  #   condition: value >= 0 && value <= 59
-  #   message:   must be between 0 and 59
-  # path: point_in_time_restore_time_in_utc
-  #   source:    validation.IsRFC3339Time(...) - no translation rule yet, add one
-  # path: private_dns_zone_id
-  #   source:    [from privatezones.ValidatePrivateDnsZoneID] !ok
-  # path: private_dns_zone_id
-  #   source:    [from privatezones.ValidatePrivateDnsZoneID] err != nil
-  # path: public_network_access
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: replication_role
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: sku_name
-  #   source:    [from validate.FlexibleServerSkuName] !ok
-  # path: sku_name
-  #   source:    [from validate.FlexibleServerSkuName] !regexp.MustCompile(`^(B_(Standard_B(1|1m|2|2m|4m|8m|12m|16m|20m)s))|(GP_(Standard_D(2|4|8|16|32|48|64)ds_v4)|(Standard_D(2|4|8|16|32|48|64)ads_v5))|(MO_((Standard_E(2|4|8|16|20|32|48|64|80i)ds_v4)|(Standard_E(2|2a|4|4a|8|8a|16|16a|20|20a|32|32a|48|48a|64|64a|96|96a)ds_v5)))$`).MatchString(v)
-  # path: source_server_id
-  #   source:    [from servers.ValidateFlexibleServerID] !ok
-  # path: source_server_id
-  #   source:    [from servers.ValidateFlexibleServerID] err != nil
-  # path: storage.iops
-  #   condition: value >= 360 && value <= 48000
-  #   message:   must be between 360 and 48000
-  # path: storage.size_gb
-  #   condition: value >= 20 && value <= 16384
-  #   message:   must be between 20 and 16384
-  # path: version
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: tags
-  #   condition: length(value) <= 50
-  #   message:   [from tags.Validate: invalid when len(value) > 50]
-  #   source:    [from tags.Validate: invalid when len(value) > 50]
-  # path: tags
-  #   condition: length(value) <= 512
-  #   message:   [from tags.Validate: invalid when len(value) > 512]
-  #   source:    [from tags.Validate: invalid when len(value) > 512]
-  # path: tags
-  #   source:    [from tags.Validate] err != nil
-  # path: tags
-  #   condition: length(value) <= 256
-  #   message:   [from tags.Validate: invalid when len(value) > 256]
-  #   source:    [from tags.Validate: invalid when len(value) > 256]
-  # path: key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] !ok
-  # path: key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] err != nil
-  # path: primary_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
-  # path: primary_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
-  # path: geo_backup_key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] !ok
-  # path: geo_backup_key_vault_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] err != nil
-  # path: geo_backup_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
-  # path: geo_backup_user_assigned_identity_id
-  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
-  # path: managed_hsm_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] !ok
-  # path: managed_hsm_key_id
-  #   source:    [from keyvault.ValidateNestedItemID] err != nil
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        length(v.name) >= 3
+      )
+    ])
+    error_message = "[from validate.FlexibleServerName: invalid when len(value) < 3]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        length(v.name) <= 63
+      )
+    ])
+    error_message = "[from validate.FlexibleServerName: invalid when len(value) > 63]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        length(v.resource_group_name) <= 90
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: invalid when len(value) > 90]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        !endswith(v.resource_group_name, ".")
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: must not end with \".\"]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        length(v.resource_group_name) != 0
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: invalid when len(value) == 0]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_login == null || (length(v.administrator_login) >= 1)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorLogin: invalid when len(value) < 1]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_login == null || (length(v.administrator_login) <= 32)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorLogin: invalid when len(value) > 32]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_password == null || (length(v.administrator_password) >= 8)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_password == null || (length(v.administrator_password) <= 128)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_password_wo == null || (length(v.administrator_password_wo) >= 8)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorPassword: invalid when len(value) < 8]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.administrator_password_wo == null || (length(v.administrator_password_wo) <= 128)
+      )
+    ])
+    error_message = "[from validate.FlexibleServerAdministratorPassword: invalid when len(value) > 128]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.backup_retention_days == null || (v.backup_retention_days >= 1 && v.backup_retention_days <= 35)
+      )
+    ])
+    error_message = "must be between 1 and 35"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.maintenance_window == null || (v.maintenance_window.day_of_week == null || (v.maintenance_window.day_of_week >= 0 && v.maintenance_window.day_of_week <= 6))
+      )
+    ])
+    error_message = "must be between 0 and 6"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.maintenance_window == null || (v.maintenance_window.start_hour == null || (v.maintenance_window.start_hour >= 0 && v.maintenance_window.start_hour <= 23))
+      )
+    ])
+    error_message = "must be between 0 and 23"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.maintenance_window == null || (v.maintenance_window.start_minute == null || (v.maintenance_window.start_minute >= 0 && v.maintenance_window.start_minute <= 59))
+      )
+    ])
+    error_message = "must be between 0 and 59"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.storage == null || (v.storage.iops == null || (v.storage.iops >= 360 && v.storage.iops <= 48000))
+      )
+    ])
+    error_message = "must be between 360 and 48000"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.storage == null || (v.storage.size_gb == null || (v.storage.size_gb >= 20 && v.storage.size_gb <= 16384))
+      )
+    ])
+    error_message = "must be between 20 and 16384"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.mysql_flexible_servers : (
+        v.tags == null || (length(v.tags) <= 50)
+      )
+    ])
+    error_message = "[from tags.Validate: invalid when len(value) > 50]"
+  }
+  # Note: 47 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
 }
 
