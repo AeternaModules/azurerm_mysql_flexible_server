@@ -29,7 +29,6 @@ Optional:
         - geo_backup_key_vault_key_id (optional)
         - geo_backup_user_assigned_identity_id (optional)
         - key_vault_key_id (optional)
-        - managed_hsm_key_id (optional)
         - primary_user_assigned_identity_id (optional)
     - high_availability (block):
         - mode (required)
@@ -76,7 +75,6 @@ EOT
       geo_backup_key_vault_key_id          = optional(string)
       geo_backup_user_assigned_identity_id = optional(string)
       key_vault_key_id                     = optional(string)
-      managed_hsm_key_id                   = optional(string)
       primary_user_assigned_identity_id    = optional(string)
     }))
     high_availability = optional(object({

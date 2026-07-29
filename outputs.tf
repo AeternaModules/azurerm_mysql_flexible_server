@@ -75,10 +75,6 @@ output "mysql_flexible_servers_public_network_access" {
   description = "Map of public_network_access values across all mysql_flexible_servers, keyed the same as var.mysql_flexible_servers"
   value       = { for k, v in azurerm_mysql_flexible_server.mysql_flexible_servers : k => v.public_network_access if v.public_network_access != null && length(v.public_network_access) > 0 }
 }
-output "mysql_flexible_servers_public_network_access_enabled" {
-  description = "Map of public_network_access_enabled values across all mysql_flexible_servers, keyed the same as var.mysql_flexible_servers"
-  value       = { for k, v in azurerm_mysql_flexible_server.mysql_flexible_servers : k => v.public_network_access_enabled if v.public_network_access_enabled != null }
-}
 output "mysql_flexible_servers_replica_capacity" {
   description = "Map of replica_capacity values across all mysql_flexible_servers, keyed the same as var.mysql_flexible_servers"
   value       = { for k, v in azurerm_mysql_flexible_server.mysql_flexible_servers : k => v.replica_capacity if v.replica_capacity != null }
